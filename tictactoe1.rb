@@ -25,6 +25,7 @@ def play_again_message
     game_play
   else
     puts "Thanks for playing --- bye!"
+    exit
   end
 end
 
