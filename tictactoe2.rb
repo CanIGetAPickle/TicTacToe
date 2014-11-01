@@ -70,7 +70,6 @@ end
 draw_helper_board 
 board = initialize_board
 draw_board(board)
-we_have_a_winner = false
 begin
   player_places_piece(board)
   draw_board(board)
