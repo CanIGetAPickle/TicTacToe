@@ -35,12 +35,19 @@ def computer_places_piece(board)
 end
  
 def check_winner(board)
+  @we_have_a_winner = false
   winning_lines = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
   winning_lines.each do |line|
-    return "You" if board.values_at(*line).count("X") == 3
-    return "Computer" if board.values_at(*line).count("O") == 3
+    if board.values_at(*line).count("X") == 3
+      @we_have_a_winner = true
+      return "You"
+    elsif board.values_at(*line).count("O") == 3
+      @we_have_a_winner = true
+      return "Computer"
+    else
+      @we_have_a_winner = false
+    end
   end
-  nil
 end
  
 def nine_positions_are_filled?(board)
@@ -63,14 +70,17 @@ end
 draw_helper_board 
 board = initialize_board
 draw_board(board)
+we_have_a_winner = false
 begin
   player_places_piece(board)
   draw_board(board)
-  computer_places_piece(board)
+  check_winner(board)
+  computer_places_piece(board) unless @we_have_a_winner
   draw_board(board)
+  check_winner(board)
+end until @we_have_a_winner || nine_positions_are_filled?(board)
+if check_winner(board)
   winner = check_winner(board)
-end until winner || nine_positions_are_filled?(board)
-if winner
   announce_winner(winner)
 else
   puts "It's a tie!"
