@@ -82,6 +82,7 @@ class Computer
   end
 
   def random_pick(board)
+    
     random = board.boxes.keys.sample until board.boxes[random] == " "
     board.boxes[random] = "O"
   end
