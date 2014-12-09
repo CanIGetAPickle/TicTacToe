@@ -1,6 +1,5 @@
 class Board
-  attr_accessor :boxes
-  attr_reader :winning_combinations
+  attr_accessor :boxes, :winning_combinations
   
   def initialize
     @boxes = { 
@@ -15,17 +14,17 @@ class Board
         9 => " " 
       }
     @winning_combinations = [
-        [boxes[1], boxes[2], boxes[3]], 
-        [boxes[4], boxes[5], boxes[6]], 
-        [boxes[7], boxes[8], boxes[9]], 
-        [boxes[1], boxes[4], boxes[7]], 
-        [boxes[2], boxes[5], boxes[8]], 
-        [boxes[3], boxes[6], boxes[9]], 
-        [boxes[1], boxes[5], boxes[9]], 
-        [boxes[3], boxes[5], boxes[7]]
+        [1, 2, 3], 
+        [4, 5, 6], 
+        [7, 8, 9], 
+        [1, 4, 7], 
+        [2, 5, 8], 
+        [3, 6, 9], 
+        [1, 5, 9], 
+        [3, 5, 7]
       ] 
   end
-  
+
   def introduce
     puts "********** Welcome to Ruby Tic Tac Toe! **********"
     puts
@@ -46,11 +45,7 @@ class Board
   end
 
   def all_positions_filled?
-    if boxes.values.all? { |values| values != " " }
-      puts "It's a tie!"
-    else
-      return false
-    end      
+    boxes.all? { |key, value| value != " " }
   end
 end
 
@@ -71,17 +66,7 @@ end
 
 class Computer
 
-  def steal_win?(board)
-    board.winning_combinations.each do |line|
-      if line.one? { |value| value == " " }
-        value = "O"
-      else
-        return false
-      end
-    end
-  end
-
-  def random_pick(board)    
+  def random_pick(board)
     random = board.boxes.keys.sample until board.boxes[random] == " "
     board.boxes[random] = "O"
   end
@@ -89,7 +74,7 @@ class Computer
   def choose(board)
     puts ">>> Computer's turn..."
     sleep(1)
-    random_pick(board) unless steal_win?(board)
+    random_pick(board)
   end
 end
 
@@ -103,17 +88,52 @@ class Game
   end
   
   def winner?
-    board.winning_combinations.any? { |*line| line == "X" || line == "O" }
-  end  
+    board.winning_combinations.each do |line|
+      if (board.boxes[line[0]] == "X" && board.boxes[line[1]] == "X" && board.boxes[line[2]] == "X") 
+        return 1
+      elsif (board.boxes[line[0]] == "O" && board.boxes[line[1]] == "O" && board.boxes[line[2]] == "O")
+        return 2
+      else
+        nil
+      end
+    end
+    nil
+  end 
+  
+  def tie?
+    board.all_positions_filled? && winner? == nil
+  end
+  
+  def player_turn
+    unless board.all_positions_filled? || winner?
+      player.choose(board)
+      board.draw
+    end
+  end
+  
+  def computer_turn
+    unless board.all_positions_filled? || winner?
+      computer.choose(board)
+      board.draw
+    end
+  end
   
   def play
     board.introduce
     begin
-      player.choose(board)
-      board.draw
-      computer.choose(board)
-      board.draw
-    end until winner? || board.all_positions_filled?
+      player_turn
+      computer_turn
+    end until winner? || tie?
+    if tie?
+      puts ">>> It's a tie!"
+      puts ">>> Game Over!"
+    elsif winner? == 1
+      puts ">>> Congratulations - you won!"
+      puts ">>> Game Over!"
+    else
+      puts ">>> Sorry - you lost!"
+      puts ">>> Game Over!"
+    end
   end
 end
 
