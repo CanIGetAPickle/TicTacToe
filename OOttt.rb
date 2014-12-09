@@ -87,7 +87,7 @@ class Game
     @board = Board.new
   end
   
-  def winner?
+  def check_for_winner
     board.winning_combinations.each do |line|
       if (board.boxes[line[0]] == "X" && board.boxes[line[1]] == "X" && board.boxes[line[2]] == "X") 
         return 1
@@ -101,18 +101,18 @@ class Game
   end 
   
   def tie?
-    board.all_positions_filled? && winner? == nil
+    board.all_positions_filled? && check_for_winner == nil
   end
   
   def player_turn
-    unless board.all_positions_filled? || winner?
+    unless board.all_positions_filled? || check_for_winner
       player.choose(board)
       board.draw
     end
   end
   
   def computer_turn
-    unless board.all_positions_filled? || winner?
+    unless board.all_positions_filled? || check_for_winner
       computer.choose(board)
       board.draw
     end
@@ -128,7 +128,7 @@ class Game
     begin
       player_turn
       computer_turn
-    end until winner? || tie?
+    end until check_for_winner || tie?
     if tie?
       puts ">>> It's a tie!"
       game_over
