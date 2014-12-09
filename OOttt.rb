@@ -117,6 +117,11 @@ class Game
       board.draw
     end
   end
+
+  def game_over
+    print "\a"
+    puts ">>> Game over!"
+  end
   
   def play
     board.introduce
@@ -126,13 +131,13 @@ class Game
     end until winner? || tie?
     if tie?
       puts ">>> It's a tie!"
-      puts ">>> Game Over!"
+      game_over
     elsif winner? == 1
       puts ">>> Congratulations - you won!"
-      puts ">>> Game Over!"
+      game_over
     else
       puts ">>> Sorry - you lost!"
-      puts ">>> Game Over!"
+      game_over
     end
   end
 end
