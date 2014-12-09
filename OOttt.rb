@@ -90,9 +90,9 @@ class Game
   def check_for_winner
     board.winning_combinations.each do |line|
       if (board.boxes[line[0]] == "X" && board.boxes[line[1]] == "X" && board.boxes[line[2]] == "X") 
-        return 1
+        return "human"
       elsif (board.boxes[line[0]] == "O" && board.boxes[line[1]] == "O" && board.boxes[line[2]] == "O")
-        return 2
+        return "computer"
       else
         nil
       end
@@ -129,14 +129,14 @@ class Game
       player_turn
       computer_turn
     end until check_for_winner || tie?
-    if tie?
-      puts ">>> It's a tie!"
+    if check_for_winner == "computer"
+      puts ">>> Sorry - you lost!"
       game_over
-    elsif winner? == 1
+    elsif check_for_winner == "human"
       puts ">>> Congratulations - you won!"
       game_over
     else
-      puts ">>> Sorry - you lost!"
+      puts ">>> It's a tie!"
       game_over
     end
   end
